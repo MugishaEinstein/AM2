@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Adventist Messengers Registration</title>
+  <link rel="icon" href="assets/logo-icon.png">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body.dark {
+      background-color: #000;
+      color: #fff;
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      max-width: 500px;
+      margin: 40px auto;
+      background: #111;
+      padding: 30px 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(255,255,255,0.1);
+      text-align: center;
+    }
+    img.logo {
+      width: 200px;
+      margin-bottom: 20px;
+    }
+    select, input[type="text"], input[type="tel"] {
+      width: 100%;
+      padding: 10px;
+      margin-top: 10px;
+      font-size: 1em;
+      border: none;
+      border-radius: 6px;
+    }
+    select {
+      background-color: #222;
+      color: #fff;
+    }
+    input {
+      background-color: #111;
+      color: #fff;
+    }
+    .checkbox {
+      text-align: left;
+      margin-top: 10px;
+    }
+    .checkbox label {
+      display: block;
+      margin: 5px 0;
+    }
+    button {
+      background: #007acc;
+      color: #fff;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 8px;
+      font-size: 1em;
+      margin-top: 20px;
+      cursor: pointer;
+      width: 100%;
+    }
+    button:disabled {
+      background: #444;
+      cursor: not-allowed;
+    }
+    .hidden {
+      display: none;
+    }
+  </style>
+</head>
+<body class="dark">
+  <div class="container">
+    <img src="assets/logo.png" class="logo" alt="Adventist Messengers Logo"/>
+    <h2 id="title">Become an Adventist Messenger</h2>
+    <p id="intro">Please select your language to begin:</p>
+
+    <select id="language" onchange="selectLanguage(this.value)">
+      <option value="">🌐 Select Language</option>
+      <option value="en">🇬🇧 English</option>
+      <option value="fr">🇨🇩 French</option>
+      <option value="sw">🇹🇿 Swahili</option>
+      <option value="rw">🇷🇼 Kinyarwanda</option>
+      <option value="am">🇪🇹 Amharic</option>
+    </select>
+
+    <div id="form-section" class="hidden">
+      <label id="label_title">Title</label>
+      <select id="titleSelect">
+        <option value="">Select</option>
+        <option value="Mr.">Mr.</option>
+        <option value="Mrs.">Mrs.</option>
+        <option value="Ms.">Ms.</option>
+      </select>
+
+      <label id="label_first_name">First Name</label>
+      <input type="text" id="first_name"/>
+
+      <label id="label_last_name">Last Name</label>
+      <input type="text" id="last_name"/>
+
+      <label id="label_phone">Phone Number (with country code)</label>
+      <input type="tel" id="phone"/>
+
+      <label id="label_gender">Gender</label>
+      <select id="gender">
+        <option value="">Select</option>
+        <option value="M">Male</option>
+        <option value="F">Female</option>
+      </select>
+
+      <label id="label_age_group">Age Group</label>
+      <select id="age_group" onchange="checkAge(this.value)">
+        <option value="">Select</option>
+        <option value="0">1–12 years old</option>
+        <option value="1">13–17 years old</option>
+        <option value="2">18–22 years old</option>
+        <option value="3">23–35 years old</option>
+        <option value="4">36–50 years old</option>
+        <option value="5">50+ years old</option>
+      </select>
+
+      <div class="checkbox">
+        <label><input type="checkbox" id="terms"/> <span id="label_terms">I accept the Terms and Privacy Policy</span></label>
+        <label><input type="checkbox" id="usdata"/> <span id="label_data">I understand my data will be stored in the US</span></label>
+      </div>
+
+      <p id="age-error" class="hidden" style="color:red;">
+        Sorry, you must be at least 13 years old to register. Please ask an older partner to assist you.
+      </p>
+
+      <button id="nextBtn" onclick="saveAndNext()" disabled>Next</button>
+    </div>
+  </div>
+
+  <script>
+    let selectedLanguage = "en";
+
+    function selectLanguage(lang) {
+      if (!lang) return;
+      selectedLanguage = lang;
+      localStorage.setItem('selectedLanguage', lang);
+      document.getElementById("form-section").classList.remove("hidden");
+
+      fetch('lang/lang-' + lang + '.json')
+        .then(res => res.json())
+        .then(texts => {
+          Object.entries(texts).forEach(([key, value]) => {
+            const el = document.getElementById(key);
+            if (el) el.innerText = value;
+          });
+        });
+    }
+
+    function checkAge(value) {
+      const btn = document.getElementById("nextBtn");
+      const ageError = document.getElementById("age-error");
+      if (value === "0") {
+        btn.disabled = true;
+        ageError.classList.remove("hidden");
+      } else {
+        ageError.classList.add("hidden");
+        checkReady();
+      }
+    }
+
+    function checkReady() {
+      const required = [
+        "first_name", "last_name", "gender", "age_group", "phone"
+      ];
+      const isComplete = required.every(id => document.getElementById(id).value.trim() !== "");
+      const terms = document.getElementById("terms").checked;
+      const usdata = document.getElementById("usdata").checked;
+      const ageGroup = document.getElementById("age_group").value;
+
+      document.getElementById("nextBtn").disabled = !(terms && usdata && ageGroup !== "0" && isComplete);
+    }
+
+    document.querySelectorAll("input, select").forEach(el => {
+      el.addEventListener("change", checkReady);
+    });
+
+    function saveAndNext() {
+      const data = {
+        title: document.getElementById("titleSelect").value,
+        first_name: document.getElementById("first_name").value,
+        last_name: document.getElementById("last_name").value,
+        phone: document.getElementById("phone").value,
+        gender: document.getElementById("gender").value,
+        age_group_id: parseInt(document.getElementById("age_group").value),
+        language_id: selectedLanguage
+      };
+
+      Object.entries(data).forEach(([k, v]) => localStorage.setItem(k, v));
+
+      fetch("https://messengers-backend.onrender.com/api/save", {
+        method: "POST",
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      }).then(res => {
+        if (res.ok) {
+          window.location.href = "page2.html";
+        } else {
+          alert("Error saving data. Please check your information.");
+        }
+      }).catch(err => {
+        alert("Connection error. Please check your network.");
+      });
+    }
+  </script>
+</body>
+</html>

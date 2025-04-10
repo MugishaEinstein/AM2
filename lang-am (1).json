@@ -1,0 +1,20 @@
+{
+  "title": "አድቬንቲስት መልእክተኞች ይሁኑ!",
+  "intro": "እባክዎ ቋንቋዎን ይምረጡ:",
+  "label_title": "መደበኛ ስም",
+  "label_first_name": "የመጀመሪያ ስም",
+  "label_last_name": "የአያት ስም",
+  "label_gender": "ፆታ",
+  "label_age_group": "የዕድሜ ቡድን",
+  "label_terms": "ውሎችን እና የግላዊነትን ፖሊሲ እቀባለሁ",
+  "label_data": "መረጃዬ በአሜሪካ እንዲቀመጥ እስማማለሁ",
+  "label_email": "ኢሜል አድራሻ",
+  "label_country": "ሀገር",
+  "label_continent": "አህጉር",
+  "label_is_student": "የሙሉ ጊዜ ተማሪ ነኝ",
+  "label_student_university": "ዩኒቨርሲቲ / ትምህርት ቤት",
+  "label_student_major": "የትምህርት አይነት",
+  "label_sms": "በSMS እንዲነገርኝ እፈቅዳለሁ",
+  "label_emailperm": "በኢሜል እንዲነገርኝ እፈቅዳለሁ",
+  "label_calls": "በቴሌፎን እንዲደውልኝ እፈቅዳለሁ"
+}

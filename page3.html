@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Step 3 – Church Affiliation</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="lang-handler.js"></script>
+</head>
+<body class="dark">
+  <div class="container">
+    <h2 id="step_title">Final Step – Church Info</h2>
+
+    <label id="label_division">Division</label>
+    <select id="division"></select>
+
+    <label id="label_union">Union</label>
+    <select id="union" onchange="loadConferences()"></select>
+
+    <label id="label_conference">Conference/Field</label>
+    <select id="conference"></select>
+
+    <label id="label_station">Station</label>
+    <input type="text" id="station">
+
+    <label id="label_district">District</label>
+    <input type="text" id="district">
+
+    <label id="label_church">Congregation</label>
+    <input type="text" id="local_church">
+
+    <label id="label_participant">Are you a regular participant in the Adventist community?</label>
+    <select id="active_participant">
+      <option value="">Select</option>
+      <option value="true">Yes</option>
+      <option value="false">No</option>
+    </select>
+
+    <label id="label_baptized">Are you a baptized member of the Adventist Church?</label>
+    <select id="baptized_member">
+      <option value="">Select</option>
+      <option value="true">Yes</option>
+      <option value="false">No</option>
+    </select>
+
+    <label id="label_plans_baptism">Do you plan to become baptized in the future?</label>
+    <select id="plans_to_be_baptized">
+      <option value="">Select</option>
+      <option value="true">Yes</option>
+      <option value="false">No</option>
+    </select>
+
+    <button onclick="submitPage3()">Next</button>
+  </div>
+
+  <script>
+    const lang = localStorage.getItem("selectedLanguage") || "en";
+    const phone = localStorage.getItem("phone");
+
+    const divisions = [{ id: 1, name: "East-Central Africa Division" }];
+    const unions = [
+      { id: 1, name: "Burundi Union Mission", division_id: 1 },
+      { id: 2, name: "Ethiopia Union Mission", division_id: 1 },
+      { id: 3, name: "Kenya Coast Field", division_id: 1 },
+      { id: 4, name: "Kenya Lake Conference", division_id: 1 }
+    ];
+    const conferences = [
+      { id: 1, name: "Bujumbura Conference", union_id: 1 },
+      { id: 2, name: "North Burundi Field", union_id: 1 },
+      { id: 3, name: "Central Ethiopia Field", union_id: 2 },
+      { id: 4, name: "Kenya Coast Field", union_id: 3 },
+      { id: 5, name: "Ranen Conference", union_id: 4 }
+    ];
+
+    function populateDropdown(id, data, key = "name") {
+      const select = document.getElementById(id);
+      select.innerHTML = '<option value="">Select</option>';
+      data.sort((a, b) => a[key].localeCompare(b[key])).forEach(item => {
+        const option = document.createElement("option");
+        option.value = item.id;
+        option.text = item.name;
+        select.appendChild(option);
+      });
+    }
+
+    function loadConferences() {
+      const unionId = parseInt(document.getElementById("union").value);
+      const filtered = conferences.filter(c => c.union_id === unionId);
+      populateDropdown("conference", filtered);
+    }
+
+    function translatePage() {
+      fetch("lang/lang-" + lang + ".json")
+        .then(res => res.json())
+        .then(texts => {
+          Object.entries(texts).forEach(([key, value]) => {
+            const el = document.getElementById(key);
+            if (el) el.innerText = value;
+          });
+        });
+    }
+
+    function submitPage3() {
+      const data = {
+        phone,
+        division_id: parseInt(document.getElementById("division").value) || null,
+        union_id: parseInt(document.getElementById("union").value) || null,
+        conference_id: parseInt(document.getElementById("conference").value) || null,
+        station: document.getElementById("station").value || null,
+        district: document.getElementById("district").value || null,
+        local_church: document.getElementById("local_church").value || null,
+        active_participant: document.getElementById("active_participant").value === "true",
+        baptized_member: document.getElementById("baptized_member").value === "true",
+        plans_to_be_baptized: document.getElementById("plans_to_be_baptized").value === "true"
+      };
+
+      Object.entries(data).forEach(([k, v]) => localStorage.setItem(k, v));
+
+      fetch("https://messengers-backend.onrender.com/api/save", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data)
+      }).then(res => {
+        if (res.ok) {
+          window.location.href = "page4.html";
+        } else {
+          alert("Error saving church affiliation.");
+        }
+      }).catch(() => alert("Connection error. Please try again."));
+    }
+
+    window.onload = () => {
+      if (!phone) {
+        alert("Missing data from previous step.");
+        window.location.href = "index.html";
+      }
+      populateDropdown("division", divisions);
+      populateDropdown("union", unions);
+      translatePage();
+    };
+  </script>
+</body>
+</html>

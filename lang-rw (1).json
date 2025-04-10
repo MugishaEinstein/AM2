@@ -1,0 +1,20 @@
+{
+  "title": "Ba Intumwa z’Abadiventisiti",
+  "intro": "Hitamo ururimi rwawe:",
+  "label_title": "Icyubahiro",
+  "label_first_name": "Izina rya mbere",
+  "label_last_name": "Izina ry'umuryango",
+  "label_gender": "Igitsina",
+  "label_age_group": "Icyiciro cy'imyaka",
+  "label_terms": "Nemera Amabwiriza n’Amategeko yerekeye ubwirinzi bw’amakuru",
+  "label_data": "Nemeye ko amakuru yanjye abikwa muri Amerika",
+  "label_email": "Email",
+  "label_country": "Igihugu",
+  "label_continent": "Umugabane",
+  "label_is_student": "Ndiga byuzuye",
+  "label_student_university": "Ishuri / Kaminuza",
+  "label_student_major": "Icyiciro cy’amasomo",
+  "label_sms": "Ndemera ko Adventist Messengers banyandikira kuri SMS",
+  "label_emailperm": "Ndemera ko banyandikira kuri Email",
+  "label_calls": "Ndemera ko banyampamagara kuri telefone"
+}

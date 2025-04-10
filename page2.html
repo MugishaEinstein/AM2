@@ -1,0 +1,122 @@
+<!-- page2.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Step 2 – Contact Info</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="lang-handler.js"></script>
+</head>
+<body class="dark">
+  <div class="container">
+    <h2 id="step_title">You're 1/3 Done!</h2>
+
+    <label id="label_email">Email Address</label>
+    <input type="email" id="email" />
+
+    <label id="label_country">Country</label>
+    <select id="country"></select>
+
+    <label id="label_is_student">Are you a student?</label>
+    <select id="is_student" onchange="toggleStudent()">
+      <option value="">Select</option>
+      <option value="true">Yes</option>
+      <option value="false">No</option>
+    </select>
+
+    <div id="student_fields" class="hidden">
+      <label id="label_university">University</label>
+      <input type="text" id="student_university" />
+      <label id="label_major">Field of Study</label>
+      <input type="text" id="student_major" />
+    </div>
+
+    <div class="checkbox">
+      <label><input type="checkbox" id="consent_sms" /> <span id="label_consent_sms">I allow Adventist Messengers to contact me via SMS</span></label>
+      <label><input type="checkbox" id="consent_email" /> <span id="label_consent_email">I allow Adventist Messengers to contact me via email</span></label>
+      <label><input type="checkbox" id="consent_calls" /> <span id="label_consent_calls">I allow Adventist Messengers to contact me via phone call</span></label>
+    </div>
+
+    <button id="nextBtn" onclick="submitPage2()">Next</button>
+  </div>
+
+  <script>
+    const lang = localStorage.getItem("selectedLanguage") || "en";
+    const phone = localStorage.getItem("phone");
+
+    if (!phone) {
+      alert("Phone number missing from previous step.");
+      window.location.href = "index.html";
+    }
+
+    function toggleStudent() {
+      const value = document.getElementById("is_student").value;
+      document.getElementById("student_fields").classList.toggle("hidden", value !== "true");
+    }
+
+    function loadCountries() {
+      const countries = [
+        { id: 1, name: "Kenya" },
+        { id: 2, name: "Uganda" },
+        { id: 3, name: "Tanzania" },
+        { id: 4, name: "Ethiopia" },
+        { id: 5, name: "Rwanda" }
+      ];
+      const dropdown = document.getElementById("country");
+      countries.sort((a, b) => a.name.localeCompare(b.name));
+      countries.forEach(c => {
+        const option = document.createElement("option");
+        option.value = c.id;
+        option.text = c.name;
+        dropdown.appendChild(option);
+      });
+    }
+
+    function translatePage() {
+      fetch("lang/lang-" + lang + ".json")
+        .then(res => res.json())
+        .then(texts => {
+          Object.entries(texts).forEach(([key, value]) => {
+            const el = document.getElementById(key);
+            if (el) el.innerText = value;
+          });
+        });
+    }
+
+    function submitPage2() {
+      const data = {
+        phone: phone,
+        email: document.getElementById("email").value || null,
+        country_id: parseInt(document.getElementById("country").value) || null,
+        is_student: document.getElementById("is_student").value === "true",
+        student_university: document.getElementById("student_university").value || null,
+        student_major: document.getElementById("student_major").value || null,
+        consent_contact_sms: document.getElementById("consent_sms").checked,
+        consent_contact_email: document.getElementById("consent_email").checked,
+        consent_contact_calls: document.getElementById("consent_calls").checked
+      };
+
+      // Store locally for next page
+      Object.entries(data).forEach(([k, v]) => localStorage.setItem(k, v));
+
+      fetch("https://messengers-backend.onrender.com/api/save", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data)
+      }).then(res => {
+        if (res.ok) {
+          window.location.href = "page3.html";
+        } else {
+          alert("Error saving your information.");
+        }
+      }).catch(() => alert("Connection error. Please try again."));
+    }
+
+    window.onload = () => {
+      loadCountries();
+      translatePage();
+    };
+  </script>
+</body>
+</html>

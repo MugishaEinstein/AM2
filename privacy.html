@@ -1,0 +1,56 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Privacy Policy – Adventist Messengers</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f3f3f3;
+      margin: 0;
+      padding: 0;
+      color: #222;
+    }
+    .container {
+      max-width: 800px;
+      margin: 40px auto;
+      background: #fff;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    p {
+      margin-bottom: 20px;
+      line-height: 1.6;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1 id="privacy_title">Privacy Policy</h1>
+    <p id="privacy_intro">Adventist Messengers is committed to protecting your privacy. We collect personal data only for the purpose of building a global community of believers and enhancing your experience.</p>
+    <p id="privacy_1">1. We store your data securely and only share it as necessary for the functioning of the Adventist Messengers platform.</p>
+    <p id="privacy_2">2. We do not sell your data to third parties.</p>
+    <p id="privacy_3">3. You may request access to or deletion of your data at any time.</p>
+    <p id="privacy_4">4. Data is stored in the United States and may be moved according to technical requirements.</p>
+  </div>
+
+<script>
+  const language = localStorage.getItem('selectedLanguage') || "en";
+  fetch('lang/lang-' + language + '.json')
+    .then(res => res.json())
+    .then(texts => {
+      Object.entries(texts).forEach(([key, value]) => {
+        const el = document.getElementById(key);
+        if (el) el.innerText = value;
+      });
+    });
+</script>
+</body>
+</html>

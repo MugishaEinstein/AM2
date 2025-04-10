@@ -1,0 +1,56 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Terms of Use – Adventist Messengers</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f3f3f3;
+      margin: 0;
+      padding: 0;
+      color: #222;
+    }
+    .container {
+      max-width: 800px;
+      margin: 40px auto;
+      background: #fff;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    p {
+      margin-bottom: 20px;
+      line-height: 1.6;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1 id="terms_title">Terms of Use</h1>
+    <p id="terms_intro">By registering as an Adventist Messenger, you agree to the following:</p>
+    <p id="terms_1">1. You will use this platform in accordance with biblical principles and Christian values.</p>
+    <p id="terms_2">2. You will not share offensive, hateful, or harmful content through this network.</p>
+    <p id="terms_3">3. You understand that your participation is voluntary and that your data may be processed in accordance with our privacy guidelines.</p>
+    <p id="terms_4">4. Adventist Messengers reserves the right to update these terms as needed.</p>
+  </div>
+
+<script>
+  const language = localStorage.getItem('selectedLanguage') || "en";
+  fetch('lang/lang-' + language + '.json')
+    .then(res => res.json())
+    .then(texts => {
+      Object.entries(texts).forEach(([key, value]) => {
+        const el = document.getElementById(key);
+        if (el) el.innerText = value;
+      });
+    });
+</script>
+</body>
+</html>

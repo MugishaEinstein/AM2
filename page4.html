@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Adventist Messengers – Welcome</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="lang-handler.js"></script>
+</head>
+<body class="dark">
+  <div class="container">
+    <h2 id="final_message">🎉 You’ve Completed Registration!</h2>
+    <p id="next_steps">Follow these steps to begin your journey:</p>
+
+    <h3 id="mighty_app">📲 Download the Adventist Messengers App</h3>
+    <a href="https://adventist-messengers.mn.co/" target="_blank" onclick="track('mighty')">Join Mighty Networks</a>
+
+    <h3 id="telegram_app">📢 Connect on Telegram</h3>
+    <a href="https://t.me/adventistmessengers" target="_blank" onclick="track('telegram')">Join Telegram Channel</a>
+
+    <h3 id="social_links">🔗 Follow us on Social Media</h3>
+    <ul>
+      <li><a href="https://instagram.com/AdventistMessengers" target="_blank" onclick="trackSocial('Instagram')">Instagram</a></li>
+      <li><a href="https://facebook.com/AdventistMessengers" target="_blank" onclick="trackSocial('Facebook')">Facebook</a></li>
+      <li><a href="https://youtube.com/@AdventistMessengers" target="_blank" onclick="trackSocial('YouTube')">YouTube</a></li>
+      <li><a href="https://tiktok.com/@AdventistMessengers" target="_blank" onclick="trackSocial('TikTok')">TikTok</a></li>
+      <li><a href="https://x.com/AdventistMessenger" target="_blank" onclick="trackSocial('X')">X (Twitter)</a></li>
+    </ul>
+
+    <p id="thank_you">Thank you for becoming part of God’s mission!</p>
+  </div>
+
+  <script>
+    const lang = localStorage.getItem("selectedLanguage") || "en";
+    const phone = localStorage.getItem("phone");
+
+    function translatePage() {
+      fetch("lang/lang-" + lang + ".json")
+        .then(res => res.json())
+        .then(texts => {
+          Object.entries(texts).forEach(([key, value]) => {
+            const el = document.getElementById(key);
+            if (el) el.innerText = value;
+          });
+        });
+    }
+
+    function track(app) {
+      const data = {
+        phone,
+        [`has_downloaded_${app}_app`]: true
+      };
+
+      fetch("https://messengers-backend.onrender.com/api/save", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data)
+      }).catch(() => {});
+    }
+
+    function trackSocial(platform) {
+      const data = {
+        user_id: phone,
+        platform: platform,
+        link_clicked: true
+      };
+
+      fetch("https://messengers-backend.onrender.com/api/social", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data)
+      }).catch(() => {});
+    }
+
+    window.onload = () => {
+      if (!phone) {
+        alert("Missing data from previous steps.");
+        window.location.href = "index.html";
+      }
+      translatePage();
+    };
+  </script>
+</body>
+</html>

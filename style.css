@@ -1,0 +1,42 @@
+
+body {
+  background-color: #111;
+  color: white;
+  font-family: Arial, sans-serif;
+  text-align: center;
+  margin: 0;
+  padding: 0;
+}
+.container {
+  max-width: 500px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background: #222;
+  border-radius: 10px;
+}
+label, input, select, button {
+  display: block;
+  width: 100%;
+  margin: 10px 0;
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #444;
+  background: #333;
+  color: #fff;
+}
+button {
+  background-color: #0d6efd;
+  font-weight: bold;
+  cursor: pointer;
+}
+.checkbox {
+  text-align: left;
+  margin-top: 10px;
+}
+img.logo {
+  width: 200px;
+  margin-bottom: 1rem;
+}
+.hidden {
+  display: none;
+}
